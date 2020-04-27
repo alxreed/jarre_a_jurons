@@ -11,23 +11,23 @@ class MyFriendPage extends StatefulWidget {
 }
 
 class _MyFriendPageState extends State<MyFriendPage> {
-  int _counter = 0;
+  int _moneyEarned = 0;
 
   void _increaseMoneyEarned() {
     setState(() {
-      _counter++;
+      _moneyEarned++;
     });
   }
 
   void _decreaseMoneyEarned() {
     setState(() {
-      _counter--;
+      _moneyEarned--;
     });
   }
 
   void _restartCounter() {
     setState(() {
-      _counter = 0;
+      _moneyEarned = 0;
     });
   }
 
@@ -109,7 +109,7 @@ class _MyFriendPageState extends State<MyFriendPage> {
                       ),
                       Center(
                         child: Text(
-                          '$_counter €',
+                          '$_moneyEarned €',
                           style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Bratsy',

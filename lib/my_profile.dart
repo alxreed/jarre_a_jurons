@@ -10,6 +10,8 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
+  int _moneyEarnedBy = 10;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -62,7 +64,7 @@ class _MyProfileState extends State<MyProfile> {
                       ),
                       Center(
                         child: Text(
-                          '10 €',
+                          '$_moneyEarnedBy €',
                           style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Bratsy',
