@@ -15,13 +15,17 @@ class _MyFriendPageState extends State<MyFriendPage> {
 
   void _increaseMoneyEarned() {
     setState(() {
-      _moneyEarned++;
+      if (_moneyEarned >= 0) {
+        _moneyEarned++;
+      }
     });
   }
 
   void _decreaseMoneyEarned() {
     setState(() {
-      _moneyEarned--;
+      if (_moneyEarned > 0) {
+        _moneyEarned--;
+      }
     });
   }
 
