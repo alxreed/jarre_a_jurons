@@ -51,28 +51,42 @@ class _MyProfileState extends State<MyProfile> {
                 Container(
                   child: Column(
                     children: <Widget>[
-                      Center(
-                        child: Text(
-                          'Vous devez',
-                          style: TextStyle(
-                              color: Colors.yellow[800],
-                              fontFamily: 'Bratsy',
-                              fontSize: 70,
-                              height: 1),
-                          textAlign: TextAlign.center,
+                      if (_moneyEarnedBy != 0) ...[
+                        Center(
+                          child: Text(
+                            'Vous devez',
+                            style: TextStyle(
+                                color: Colors.yellow[800],
+                                fontFamily: 'Bratsy',
+                                fontSize: 70,
+                                height: 1),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Center(
-                        child: Text(
-                          '$_moneyEarnedBy €',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Bratsy',
-                              fontSize: 120,
-                              height: 1),
-                          textAlign: TextAlign.center,
+                        Center(
+                          child: Text(
+                            '$_moneyEarnedBy €',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Bratsy',
+                                fontSize: 120,
+                                height: 1),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
+                      ],
+                      if ( _moneyEarnedBy == 0)
+                        Center(
+                          child: Text(
+                            'Vous ne devez rien',
+                            style: TextStyle(
+                                color: Colors.yellow[800],
+                                fontFamily: 'Bratsy',
+                                fontSize: 70,
+                                height: 1),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       Center(
                         child: Text(
                           'à Héléna',
@@ -80,7 +94,7 @@ class _MyProfileState extends State<MyProfile> {
                               color: Colors.yellow[800],
                               fontFamily: 'Bratsy',
                               fontSize: 70,
-                              height: 0.5),
+                              height: _moneyEarnedBy != 0 ? 0.5 : 1.2),
                           textAlign: TextAlign.center,
                         ),
                       ),
