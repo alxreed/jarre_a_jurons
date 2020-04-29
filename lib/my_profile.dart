@@ -33,6 +33,29 @@ class _MyProfileState extends State<MyProfile> {
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      width: 50,
+                      child: FittedBox(
+                        child: FlatButton(
+                            onPressed: null,
+                            child: Icon(Icons.drafts, color: Colors.white, size: 60,)),
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      child: FittedBox(
+                          child: FlatButton(
+                            onPressed: () => authService.signOut(),
+                            child: Icon(Icons.power_settings_new, color: Colors.white, size: 60,),
+                          )),
+                    ),
+                  ],
+                ),
                 Container(
                   child: Column(
                     children: <Widget>[

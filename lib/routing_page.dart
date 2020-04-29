@@ -31,19 +31,22 @@ class _RoutingPageState extends State<RoutingPage> {
               children: [MyProfile(), MyFriendPage()],
             );
           } else {
-            return Center(
-              child: FloatingActionButton.extended(
-                backgroundColor: Colors.white,
-                onPressed: () {
-                  authService.googleSignIn();
-                },
-                icon: Icon(
-                  FontAwesome.google,
-                  color: Colors.purple[700],
-                ),
-                label: Text(
-                  'Sign in with Google',
-                  style: TextStyle(color: Colors.purple[700]),
+            return Scaffold(
+              backgroundColor: Colors.purple[700],
+              body: Center(
+                child: FloatingActionButton.extended(
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    authService.googleSignIn();
+                  },
+                  icon: Icon(
+                    FontAwesome.google,
+                    color: Colors.purple[700],
+                  ),
+                  label: Text(
+                    'Sign in with Google',
+                    style: TextStyle(color: Colors.purple[700]),
+                  ),
                 ),
               ),
             );
