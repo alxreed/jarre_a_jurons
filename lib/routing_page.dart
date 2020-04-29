@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:jarreajurons/my_friend_page.dart';
 import 'package:jarreajurons/my_profile.dart';
+import 'package:jarreajurons/service/auth_service.dart';
 
 class RoutingPage extends StatefulWidget {
   @override
@@ -20,9 +22,32 @@ class _RoutingPageState extends State<RoutingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _controller,
-      children: [MyProfile(), MyFriendPage()],
-    );
+    return StreamBuilder(
+        stream: authService.user,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return PageView(
+              controller: _controller,
+              children: [MyProfile(), MyFriendPage()],
+            );
+          } else {
+            return Center(
+              child: FloatingActionButton.extended(
+                backgroundColor: Colors.white,
+                onPressed: () {
+                  authService.googleSignIn();
+                },
+                icon: Icon(
+                  FontAwesome.google,
+                  color: Colors.purple[700],
+                ),
+                label: Text(
+                  'Sign in with Google',
+                  style: TextStyle(color: Colors.purple[700]),
+                ),
+              ),
+            );
+          }
+        });
   }
 }

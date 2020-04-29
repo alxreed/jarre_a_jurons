@@ -8,14 +8,15 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final Firestore _db = Firestore.instance;
 
-  Stream<FirebaseUser> user;
-  Stream<Map<String, dynamic>> profile;
+  Observable<FirebaseUser> user;
+  Observable<Map<String, dynamic>> profile;
   PublishSubject loading = PublishSubject();
 
   AuthService() {
-    user = _auth.onAuthStateChanged;
+    user = Observable(_auth.onAuthStateChanged);
 
     profile = user.switchMap((FirebaseUser u) {
+      print(user);
       if (u != null) {
         return _db
             .collection('users')
@@ -23,7 +24,7 @@ class AuthService {
             .snapshots()
             .map((snap) => snap.data);
       } else {
-        return Stream.value({});
+        return Observable.just({});
       }
     });
   }
@@ -41,11 +42,31 @@ class AuthService {
     );
 
     FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+
+    updateUserData(user);
+
+    print("sign in " + user.displayName);
+
+    loading.add(false);
+
+    return user;
   }
 
-  void updateUserData(FirebaseUser user) async {}
+  void updateUserData(FirebaseUser user) async {
+    DocumentReference ref = _db.collection('users').document(user.uid);
 
-  void signOut() {}
+    return ref.setData({
+      'uid': user.displayName,
+      'email': user.email,
+      'photoUrl': user.photoUrl,
+      'displayName': user.displayName,
+      'lastSeen': DateTime.now()
+    }, merge: true);
+  }
+
+  void signOut() {
+    _auth.signOut();
+  }
 }
 
 final AuthService authService = AuthService();

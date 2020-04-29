@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/service/auth_service.dart';
 
 class MyProfile extends StatefulWidget {
   MyProfile({Key key, this.title}) : super(key: key);
@@ -11,6 +12,18 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   int _moneyEarnedBy = 10;
+  Map<String, dynamic> _profile;
+  bool _loading = false;
+
+  @override
+  initState() {
+    super.initState();
+
+    // Subscriptions are created here
+    authService.profile.listen((state) => setState(() => _profile = state));
+
+    authService.loading.listen((state) => setState(() => _loading = state));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +120,9 @@ class _MyProfileState extends State<MyProfile> {
                     _showDialog();
                   },
                   label: Text('Payer'),
-                )
+                ),
+                Container(padding: EdgeInsets.all(20), child: Text(_profile.toString())),
+                Text(_loading.toString())
               ],
             )));
   }
