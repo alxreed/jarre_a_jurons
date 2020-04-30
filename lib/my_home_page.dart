@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/login_page.dart';
 import 'package:jarreajurons/routing_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -31,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.push(
               context,
 //              MaterialPageRoute(builder: (context) => RoutingPage()),
-              MaterialPageRoute(builder: (context) => RoutingPage()),
+              MaterialPageRoute(builder: (context) => LoginPage()),
             );
           },
         ));
