@@ -22,20 +22,6 @@ class _MyProfileState extends State<MyProfile> {
   StreamSubscription subscription;
 
   @override
-  initState() {
-    super.initState();
-    subscription = Firestore.instance
-        .collection('users')
-        .document(widget.user.uid)
-        .snapshots()
-        .listen((data) {
-      setState(() {
-        widget.user = User(data);
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       builder: (context, snapshot) {

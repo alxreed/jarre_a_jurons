@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jarreajurons/my_friend_page.dart';
 import 'package:jarreajurons/my_profile.dart';
 
+import 'model/friend.dart';
 import 'model/user.dart';
 
 class RoutingPage extends StatefulWidget {
@@ -34,11 +35,12 @@ class _RoutingPageState extends State<RoutingPage> {
         if (!snapshot.hasData) return Text('Loading...');
         DocumentSnapshot document = snapshot.data;
         User user = User(document);
+        List<Friend> friends = user.friends;
         return PageView(
           controller: _controller,
           children: [
             MyProfile(user: user),
-            MyFriendPage(),
+            ...new List.generate(friends.length, (index) => MyFriendPage(friend: friends[index])),
           ],
         );
       },
