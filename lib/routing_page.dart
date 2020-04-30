@@ -1,14 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/my_friend_page.dart';
 import 'package:jarreajurons/my_profile.dart';
+import 'package:jarreajurons/services/user_service.dart';
+
+import 'controllers/user_controller.dart';
+import 'model/user.dart';
 
 class RoutingPage extends StatefulWidget {
   final FirebaseUser user;
 
   RoutingPage({Key key, @required this.user}) : super(key: key);
 
-  
   @override
   _RoutingPageState createState() => _RoutingPageState();
 }
@@ -26,9 +30,20 @@ class _RoutingPageState extends State<RoutingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _controller,
-      children: [MyProfile(), MyFriendPage()],
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').document(widget.user.uid).snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return Text('Loading...');
+        DocumentSnapshot document = snapshot.data;
+        User user = User(document);
+        return PageView(
+          controller: _controller,
+          children: [
+            MyProfile(),
+            MyFriendPage(),
+          ],
+        );
+      },
     );
   }
 }
