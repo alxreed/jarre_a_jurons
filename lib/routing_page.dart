@@ -3,9 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/my_friend_page.dart';
 import 'package:jarreajurons/my_profile.dart';
-import 'package:jarreajurons/services/user_service.dart';
 
-import 'controllers/user_controller.dart';
 import 'model/user.dart';
 
 class RoutingPage extends StatefulWidget {
@@ -39,7 +37,7 @@ class _RoutingPageState extends State<RoutingPage> {
         return PageView(
           controller: _controller,
           children: [
-            MyProfile(),
+            MyProfile(user: user),
             MyFriendPage(),
           ],
         );

@@ -1,161 +1,191 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/model/user.dart';
 import 'package:jarreajurons/services/auth_service.dart';
 
 class MyProfile extends StatefulWidget {
-  MyProfile({Key key, this.title}) : super(key: key);
+  MyProfile({Key key, this.title, this.user}) : super(key: key);
 
   final String title;
+  User user;
 
   @override
   _MyProfileState createState() => _MyProfileState();
 }
 
 class _MyProfileState extends State<MyProfile> {
-  int _moneyEarnedBy = 10;
-  Map<String, dynamic> _profile;
-  bool _loading = false;
+  int _moneyEarnedBy;
+
+  // ignore: cancel_subscriptions
+  StreamSubscription subscription;
 
   @override
   initState() {
     super.initState();
+    subscription = Firestore.instance
+        .collection('users')
+        .document(widget.user.uid)
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        widget.user = User(data);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: Colors.purple[700],
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+    return StreamBuilder(
+      builder: (context, snapshot) {
+        _moneyEarnedBy = widget.user.friends[0].moneyEarnedBy;
+        return SafeArea(
+            child: Scaffold(
+                backgroundColor: Colors.purple[700],
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container(
-                      height: 50,
-                      width: 50,
-                      child: FittedBox(
-                        child: FlatButton(
-                            onPressed: null,
-                            child: Icon(Icons.drafts, color: Colors.white, size: 60,)),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      child: FittedBox(
-                          child: FlatButton(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          height: 50,
+                          width: 50,
+                          child: FittedBox(
+                            child: FlatButton(
+                                onPressed: null,
+                                child: Icon(
+                                  Icons.drafts,
+                                  color: Colors.white,
+                                  size: 60,
+                                )),
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 50,
+                          child: FittedBox(
+                              child: FlatButton(
                             onPressed: () => authService.signOut(),
-                            child: Icon(Icons.power_settings_new, color: Colors.white, size: 60,),
-                          )),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Column(
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: AssetImage('assets/alex.jpg'),
-                                  fit: BoxFit.cover)),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          'Alexandre',
-                          style: TextStyle(
+                            child: Icon(
+                              Icons.power_settings_new,
                               color: Colors.white,
-                              fontFamily: 'Bratsy',
-                              fontSize: 40,
-                              height: 1.3),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    children: <Widget>[
-                      if (_moneyEarnedBy != 0) ...[
-                        Center(
-                          child: Text(
-                            'Vous devez',
-                            style: TextStyle(
-                                color: Colors.yellow[800],
-                                fontFamily: 'Bratsy',
-                                fontSize: 70,
-                                height: 1),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Center(
-                          child: Text(
-                            '$_moneyEarnedBy €',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Bratsy',
-                                fontSize: 120,
-                                height: 1),
-                            textAlign: TextAlign.center,
-                          ),
+                              size: 60,
+                            ),
+                          )),
                         ),
                       ],
-                      if ( _moneyEarnedBy == 0)
-                        Center(
-                          child: Text(
-                            'Vous ne devez rien',
-                            style: TextStyle(
-                                color: Colors.yellow[800],
-                                fontFamily: 'Bratsy',
-                                fontSize: 70,
-                                height: 1),
-                            textAlign: TextAlign.center,
+                    ),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Center(
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: NetworkImage(widget.user.photoUrl),
+                                      fit: BoxFit.cover)),
+                            ),
                           ),
-                        ),
-                      Center(
-                        child: Text(
-                          'à Héléna',
-                          style: TextStyle(
-                              color: Colors.yellow[800],
-                              fontFamily: 'Bratsy',
-                              fontSize: 70,
-                              height: _moneyEarnedBy != 0 ? 0.5 : 1.2),
-                          textAlign: TextAlign.center,
-                        ),
+                          Center(
+                            child: Text(
+                              widget.user.name,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Bratsy',
+                                  fontSize: 40,
+                                  height: 1.3),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                FloatingActionButton.extended(
-                  onPressed: () {
-                    print("rends l'argent");
-                    _showDialog();
-                  },
-                  label: Text('Payer'),
-                ),
-              ],
-            )));
+                    ),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          if (_moneyEarnedBy != 0) ...[
+                            Center(
+                              child: Text(
+                                'Vous devez',
+                                style: TextStyle(
+                                    color: Colors.yellow[800],
+                                    fontFamily: 'Bratsy',
+                                    fontSize: 70,
+                                    height: 1),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                '$_moneyEarnedBy €',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Bratsy',
+                                    fontSize: 120,
+                                    height: 1),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                          if (_moneyEarnedBy == 0)
+                            Center(
+                              child: Text(
+                                'Vous ne devez rien',
+                                style: TextStyle(
+                                    color: Colors.yellow[800],
+                                    fontFamily: 'Bratsy',
+                                    fontSize: 70,
+                                    height: 1),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          Center(
+                            child: Text(
+                              'à ${widget.user.friends[0].name}',
+                              style: TextStyle(
+                                  color: Colors.yellow[800],
+                                  fontFamily: 'Bratsy',
+                                  fontSize: 70,
+                                  height: _moneyEarnedBy != 0 ? 0.5 : 1.2),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FloatingActionButton.extended(
+                      onPressed: () {
+                        print("rends l'argent");
+                        _showDialog();
+                      },
+                      label: Text('Payer'),
+                    ),
+                  ],
+                )));
+      },
+    );
   }
 
   void _showDialog() {
-    showDialog(context: context, builder: (BuildContext context) {
-      return AlertDialog(
-        content: Text('Aucun moyen de paiement connecté'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('OK BB'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('Aucun moyen de paiement connecté'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK BB'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 }

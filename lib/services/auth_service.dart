@@ -56,7 +56,7 @@ class AuthService {
     DocumentReference ref = _db.collection('users').document(user.uid);
 
     return ref.setData({
-      'uid': user.displayName,
+      'uid': user.uid,
       'email': user.email,
       'photoUrl': user.photoUrl,
       'displayName': user.displayName,
