@@ -40,7 +40,7 @@ class _RoutingPageState extends State<RoutingPage> {
           controller: _controller,
           children: [
             MyProfile(user: user),
-            ...new List.generate(friends.length, (index) => MyFriendPage(friend: friends[index])),
+            ...new List.generate(friends.length, (index) => MyFriendPage(user: user, friend: friends[index])),
           ],
         );
       },
