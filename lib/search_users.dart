@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/controllers/friend_controller.dart';
+import 'package:jarreajurons/controllers/user_controller.dart';
 import 'package:jarreajurons/model/user.dart';
 import 'package:jarreajurons/services/invitation_service.dart';
 
@@ -22,13 +24,14 @@ class _SearchUsersState extends State<SearchUsers> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Text('Loading...');
           List<DocumentSnapshot> users = snapshot.data.documents;
+          if (userController.allUsersAreMyFriends(widget.user, users)) return Text("hehe");
           return Scaffold(
             backgroundColor: Colors.purple[700],
             body: ListView.builder(
                 itemCount: users.length,
                 // ignore: missing_return
                 itemBuilder: (BuildContext context, int index) {
-                  if (widget.user.uid != users[index]["uid"]) {
+                  if (userController.isMe(widget.user.uid, users[index]["uid"]) && !friendController.isFriend(widget.user, users[index]["uid"])) {
                     return GestureDetector(
                       onTap: () {
                         _showDialog(users[index], users[index]["uid"]);
