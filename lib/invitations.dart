@@ -43,7 +43,7 @@ class _InvitationsState extends State<Invitations> {
                   itemCount: invitations.length,
                   // ignore: missing_return
                   itemBuilder: (BuildContext context, int index) {
-                    if (invitations[index].accepted == false)
+                    if (!invitations[index].accepted) {
                       return GestureDetector(
                         onTap: () {
                           _acceptInvite(invitations[index]);
@@ -88,6 +88,9 @@ class _InvitationsState extends State<Invitations> {
                           ],
                         ),
                       );
+                    } else {
+                      return null;
+                    }
                   }),
             )
           ],
@@ -101,8 +104,8 @@ class _InvitationsState extends State<Invitations> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text(
-                "Envoyer une demande d'ajout d'ami à ${invitation.name}"),
+            content:
+                Text("Envoyer une demande d'ajout d'ami à ${invitation.name}"),
             actions: <Widget>[
               FlatButton(
                 child: Text('NIQUE TA MERE'),
@@ -118,8 +121,7 @@ class _InvitationsState extends State<Invitations> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              MyProfile(user: widget.user)));
+                          builder: (context) => MyProfile(user: widget.user)));
                 },
               ),
             ],
