@@ -12,12 +12,18 @@ class FriendService {
     DocumentReference ref = _db.collection('users').document(user.uid);
     List<dynamic> friends = new List<dynamic>();
     user.friends.forEach((f) {
+      HashMap<dynamic, dynamic> map = new HashMap<dynamic, dynamic>();
       if(f.uid == friend.uid) {
-        HashMap<dynamic, dynamic> map = new HashMap<dynamic, dynamic>();
         map["uid"] = f.uid;
         map["name"] = f.name;
         map["photoUrl"] = f.photoUrl;
         map["moneyEarned"] = amount;
+        friends.add(map);
+      } else {
+        map["uid"] = f.uid;
+        map["name"] = f.name;
+        map["photoUrl"] = f.photoUrl;
+        map["moneyEarned"] = f.moneyEarned;
         friends.add(map);
       }
     });

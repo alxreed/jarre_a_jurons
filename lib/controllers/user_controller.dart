@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jarreajurons/model/friend.dart';
+import 'package:jarreajurons/model/invitation.dart';
 import 'package:jarreajurons/model/user.dart';
 import 'package:jarreajurons/services/user_service.dart';
 
@@ -17,6 +19,12 @@ class UserController {
       }
     });
     return allUsersAreMyfriends;
+  }
+
+  void addFriend(User user, Invitation invitation) {
+    Friend newFriend = Friend.fromInvitation(invitation);
+    user.addFriend(newFriend);
+    userService.addFriendInDB(user, newFriend);
   }
 }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/invitations.dart';
 import 'package:jarreajurons/model/user.dart';
 import 'package:jarreajurons/search_users.dart';
 import 'package:jarreajurons/services/auth_service.dart';
@@ -53,7 +54,8 @@ class _MyProfileState extends State<MyProfile> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SearchUsers(user: widget.user)));
+                                      builder: (context) =>
+                                          SearchUsers(user: widget.user)));
                             },
                             child: Icon(
                               Icons.search,
@@ -62,19 +64,40 @@ class _MyProfileState extends State<MyProfile> {
                             )),
                       ),
                     ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      child: FittedBox(
-                        child: FlatButton(
-                            onPressed: null,
-                            child: Icon(
-                              Icons.drafts,
-                              color: Colors.white,
-                              size: 60,
-                            )),
+                    if (!widget.user.hasInvitations())
+                      Container(
+                        height: 50,
+                        width: 50,
+                        child: FittedBox(
+                          child: FlatButton(
+                              onPressed: _noInvite,
+                              child: Icon(
+                                Icons.drafts,
+                                color: Colors.white,
+                                size: 60,
+                              )),
+                        ),
                       ),
-                    ),
+                    if (widget.user.hasInvitations())
+                      Container(
+                        height: 50,
+                        width: 50,
+                        child: FittedBox(
+                          child: FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Invitations(user: widget.user)));
+                              },
+                              child: Icon(
+                                Icons.email,
+                                color: Colors.white,
+                                size: 60,
+                              )),
+                        ),
+                      ),
                     Container(
                       height: 50,
                       width: 50,
@@ -172,11 +195,15 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                 ),
                 FloatingActionButton.extended(
+                  backgroundColor: Colors.white,
                   onPressed: () {
                     print("rends l'argent");
                     _showDialog();
                   },
-                  label: Text('Payer'),
+                  label: Text(
+                    'PAYER',
+                    style: TextStyle(color: Colors.purple[700]),
+                  ),
                 ),
               ],
             ));
@@ -203,6 +230,28 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   int getMoneyEarnedBy(AsyncSnapshot snapshot) {
-    return snapshot.data["friends"][0]["moneyEarned"];
+    if (snapshot.data != null) {
+      return snapshot.data["friends"][0]["moneyEarned"];
+    } else {
+      return 0;
+    }
+  }
+
+  void _noInvite() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("Vous n'avez pas de demande d'ajout"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('GOT IT'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 }

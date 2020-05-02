@@ -24,59 +24,97 @@ class _SearchUsersState extends State<SearchUsers> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Text('Loading...');
           List<DocumentSnapshot> users = snapshot.data.documents;
-          if (userController.allUsersAreMyFriends(widget.user, users)) return Text("hehe");
+          if (userController.allUsersAreMyFriends(widget.user, users))
+            return Scaffold(
+              backgroundColor: Colors.purple[700],
+              body: Center(
+                child: Text(
+                  "Tous les utilisateurs sont déjà vos amis",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Bratsy',
+                      fontSize: 40,
+                      height: 1.3),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
           return Scaffold(
             backgroundColor: Colors.purple[700],
-            body: ListView.builder(
-                itemCount: users.length,
-                // ignore: missing_return
-                itemBuilder: (BuildContext context, int index) {
-                  if (userController.isMe(widget.user.uid, users[index]["uid"]) && !friendController.isFriend(widget.user, users[index]["uid"])) {
-                    return GestureDetector(
-                      onTap: () {
-                        _showDialog(users[index], users[index]["uid"]);
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 30,
-                              ),
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            users[index]["photoUrl"]),
-                                        fit: BoxFit.cover)),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              Text(
-                                users[index]["displayName"],
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Bratsy',
-                                    fontSize: 40,
-                                    height: 1.3),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  }
-                }),
+            body: Column(
+              children: <Widget>[
+                Center(
+                  child: Text(
+                    "Rechercher un ami",
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.white,
+                        fontFamily: 'Bratsy',
+                        fontSize: 40,
+                        height: 2.5),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: users.length,
+                      // ignore: missing_return
+                      itemBuilder: (BuildContext context, int index) {
+                        if (!widget.user.isMe(users[index]["uid"])) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (!widget.user
+                                  .isMyFriend(users[index]["uid"])) {
+                                _showDialog(users[index], users[index]["uid"]);
+                              } else {
+                                _isAlreadyMyFriend(users[index]);
+                              }
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                if (index > 0)
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  users[index]["photoUrl"]),
+                                              fit: BoxFit.cover)),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    Text(
+                                      users[index]["displayName"],
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Bratsy',
+                                          fontSize: 40,
+                                          height: 1.3),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        }
+                      }),
+                )
+              ],
+            ),
           );
         });
   }
@@ -90,8 +128,8 @@ class _SearchUsersState extends State<SearchUsers> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content:
-            Text("Envoyer une demande d'ajout d'ami à ${snapshot["displayName"]}"),
+            content: Text(
+                "Envoyer une demande d'ajout d'ami à ${snapshot["displayName"]}"),
             actions: <Widget>[
               FlatButton(
                 child: Text('NIQUE TA MERE'),
@@ -107,7 +145,26 @@ class _SearchUsersState extends State<SearchUsers> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SearchUsers(user: widget.user)));
+                          builder: (context) =>
+                              SearchUsers(user: widget.user)));
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void _isAlreadyMyFriend(DocumentSnapshot snapshot) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("${snapshot["displayName"]} est déjà votre ami"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('GOT IT'),
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
               ),
             ],

@@ -1,17 +1,24 @@
+import 'package:jarreajurons/model/invitation.dart';
+
 class Friend {
   String uid;
   String name;
   String photoUrl;
   int moneyEarned;
-  int moneyEarnedBy;
 
   Friend(dynamic map) {
     uid = map["uid"];
     name = map["name"];
     photoUrl = map["photoUrl"];
     moneyEarned = map["moneyEarned"];
-    moneyEarnedBy = map["moneyEarnedBy"];
 
+  }
+
+  Friend.fromInvitation(Invitation invitation) {
+    this.uid = invitation.userUid;
+    this.name = invitation.name;
+    this.photoUrl = invitation.userPhoto;
+    this.moneyEarned = 0;
   }
 
 }
