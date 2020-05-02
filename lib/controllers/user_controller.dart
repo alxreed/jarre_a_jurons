@@ -26,6 +26,10 @@ class UserController {
     user.addFriend(newFriend);
     userService.addFriendInDB(user, newFriend);
   }
+
+  User getUser(String uid) {
+    return userService.getUser(uid);
+  }
 }
 
 final UserController userController = new UserController();

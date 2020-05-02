@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/controllers/friend_controller.dart';
 import 'package:jarreajurons/controllers/invitation_controller.dart';
 import 'package:jarreajurons/controllers/user_controller.dart';
 import 'package:jarreajurons/my_profile.dart';
@@ -43,7 +44,6 @@ class _InvitationsState extends State<Invitations> {
                   itemCount: invitations.length,
                   // ignore: missing_return
                   itemBuilder: (BuildContext context, int index) {
-                    if (!invitations[index].accepted) {
                       return GestureDetector(
                         onTap: () {
                           _acceptInvite(invitations[index]);
@@ -88,9 +88,6 @@ class _InvitationsState extends State<Invitations> {
                           ],
                         ),
                       );
-                    } else {
-                      return null;
-                    }
                   }),
             )
           ],
@@ -118,6 +115,7 @@ class _InvitationsState extends State<Invitations> {
                 onPressed: () {
                   userController.addFriend(widget.user, invitation);
                   invitationController.turnOffInvite(widget.user, invitation);
+                  friendController.addMeAsFriend(widget.user, invitation);
                   Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -1,4 +1,5 @@
 import 'package:jarreajurons/model/invitation.dart';
+import 'package:jarreajurons/model/user.dart';
 
 class Friend {
   String uid;
@@ -18,6 +19,13 @@ class Friend {
     this.uid = invitation.userUid;
     this.name = invitation.name;
     this.photoUrl = invitation.userPhoto;
+    this.moneyEarned = 0;
+  }
+
+  Friend.fromUser(User user) {
+    this.uid = user.uid;
+    this.name = user.name;
+    this.photoUrl = user.photoUrl;
     this.moneyEarned = 0;
   }
 
