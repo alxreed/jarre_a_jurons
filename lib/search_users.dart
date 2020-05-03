@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/controllers/friend_controller.dart';
 import 'package:jarreajurons/controllers/user_controller.dart';
+import 'package:jarreajurons/loader.dart';
 import 'package:jarreajurons/model/user.dart';
 import 'package:jarreajurons/services/invitation_service.dart';
 
@@ -22,7 +23,7 @@ class _SearchUsersState extends State<SearchUsers> {
     return StreamBuilder(
         stream: Firestore.instance.collection('users').snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return Text('Loading...');
+          if (!snapshot.hasData) return Loader();
           List<DocumentSnapshot> users = snapshot.data.documents;
           if (userController.allUsersAreMyFriends(widget.user, users))
             return Scaffold(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/loader.dart';
 import 'package:jarreajurons/my_friend_page.dart';
 import 'package:jarreajurons/my_profile.dart';
 
@@ -32,7 +33,7 @@ class _RoutingPageState extends State<RoutingPage> {
     return StreamBuilder(
       stream: Firestore.instance.collection('users').document(widget.user.uid).snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return Text('Loading...');
+        if (!snapshot.hasData) return Loader();
         DocumentSnapshot document = snapshot.data;
         User user = User(document);
         List<Friend> friends = user.friends;
