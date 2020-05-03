@@ -4,6 +4,7 @@ import 'package:jarreajurons/controllers/friend_controller.dart';
 import 'package:jarreajurons/controllers/invitation_controller.dart';
 import 'package:jarreajurons/controllers/user_controller.dart';
 import 'package:jarreajurons/my_profile.dart';
+import 'package:jarreajurons/services/invitation_service.dart';
 
 import 'model/invitation.dart';
 import 'model/user.dart';
@@ -18,11 +19,20 @@ class Invitations extends StatefulWidget {
 }
 
 class _InvitationsState extends State<Invitations> {
+  List<Invitation> invitations;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    invitations = widget.user.invitations;
+    invitations = invitationService.removeAcceptedInvite(invitations);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return StreamBuilder(builder: (context, snapshot) {
-      List<Invitation> invitations = widget.user.invitations;
       return Scaffold(
         backgroundColor: Colors.purple[700],
         body: Column(

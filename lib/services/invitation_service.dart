@@ -45,6 +45,10 @@ class InvitationService {
     });
     return await ref.updateData({'invitations': invitations});
   }
+
+  List<Invitation> removeAcceptedInvite(List<Invitation> invitations) {
+    return invitations.where((invitation) => !invitation.accepted).toList();
+  }
 }
 
 final InvitationService invitationService = new InvitationService();
