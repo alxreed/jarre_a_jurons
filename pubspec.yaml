@@ -31,10 +31,23 @@ dependencies:
   rxdart: ^0.20.0
   flutter_icons: ^1.1.0
   flutter_spinkit: ^4.1.2
+  flutter_launcher_icons: ^0.7.5
+  flutter_launcher_name: ^0.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/icon.png"
+  image_path_android: "assets/icon.png"
+  adaptive_icon_background: "assets/background.png"
+  adaptive_icon_foreground: "assets/foreground.png"
+
+flutter_launcher_name:
+  name: "La Jarre à Jurons"
 
 
 # For information on the generic Dart part of this file, see the
