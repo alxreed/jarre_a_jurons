@@ -104,13 +104,13 @@ class _MyProfileState extends State<MyProfile> {
                       width: 50,
                       child: FittedBox(
                           child: FlatButton(
-                            onPressed: () => authService.signOut(),
-                            child: Icon(
-                              Icons.power_settings_new,
-                              color: Colors.white,
-                              size: 60,
-                            ),
-                          )),
+                        onPressed: () => authService.signOut(),
+                        child: Icon(
+                          Icons.power_settings_new,
+                          color: Colors.white,
+                          size: 60,
+                        ),
+                      )),
                     ),
                   ],
                 ),
@@ -142,59 +142,72 @@ class _MyProfileState extends State<MyProfile> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Column(
-                    children: <Widget>[
-                      if (_moneyEarnedBy != 0) ...[
+                if (widget.user.friends.length > 0)
+                  Container(
+                    child: Column(
+                      children: <Widget>[
+                        if (_moneyEarnedBy != 0) ...[
+                          Center(
+                            child: Text(
+                              'Vous devez',
+                              style: TextStyle(
+                                  color: Colors.yellow[800],
+                                  fontFamily: 'Bratsy',
+                                  fontSize: 70,
+                                  height: 1),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              '$_moneyEarnedBy €',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Bratsy',
+                                  fontSize: 120,
+                                  height: 1),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                        if (_moneyEarnedBy == 0)
+                          Center(
+                            child: Text(
+                              'Vous ne devez rien',
+                              style: TextStyle(
+                                  color: Colors.yellow[800],
+                                  fontFamily: 'Bratsy',
+                                  fontSize: 70,
+                                  height: 1),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         Center(
                           child: Text(
-                            'Vous devez',
+                            'à ${widget.user.friends[index].name}',
                             style: TextStyle(
                                 color: Colors.yellow[800],
                                 fontFamily: 'Bratsy',
                                 fontSize: 70,
-                                height: 1),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Center(
-                          child: Text(
-                            '$_moneyEarnedBy €',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Bratsy',
-                                fontSize: 120,
-                                height: 1),
+                                height: _moneyEarnedBy != 0 ? 0.5 : 1.2),
                             textAlign: TextAlign.center,
                           ),
                         ),
                       ],
-                      if (_moneyEarnedBy == 0)
-                        Center(
-                          child: Text(
-                            'Vous ne devez rien',
-                            style: TextStyle(
-                                color: Colors.yellow[800],
-                                fontFamily: 'Bratsy',
-                                fontSize: 70,
-                                height: 1),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      Center(
-                        child: Text(
-                          'à ${widget.user.friends[index].name}',
-                          style: TextStyle(
-                              color: Colors.yellow[800],
-                              fontFamily: 'Bratsy',
-                              fontSize: 70,
-                              height: _moneyEarnedBy != 0 ? 0.5 : 1.2),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                if (widget.user.friends.length == 0)
+                  Center(
+                    child: Text(
+                      "Vous n'avez pas d'ami",
+                      style: TextStyle(
+                          color: Colors.yellow[800],
+                          fontFamily: 'Bratsy',
+                          fontSize: 70,
+                          height: 1),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
 /*                FloatingActionButton.extended(
                   backgroundColor: Colors.white,
                   onPressed: () {
@@ -225,7 +238,9 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                         ),
                       if (index > 0)
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                       if (index < widget.user.friends.length - 1)
                         FloatingActionButton(
                           backgroundColor: Colors.white,
