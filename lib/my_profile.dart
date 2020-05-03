@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/invitations.dart';
 import 'package:jarreajurons/model/user.dart';
@@ -33,7 +34,7 @@ class _MyProfileState extends State<MyProfile> {
     return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
-          .document(widget.user.friends[0].uid)
+          .document(widget.user.friends[index].uid)
           .snapshots(),
       builder: (context, snapshot) {
         _moneyEarnedBy = getMoneyEarnedBy(snapshot);
@@ -103,13 +104,13 @@ class _MyProfileState extends State<MyProfile> {
                       width: 50,
                       child: FittedBox(
                           child: FlatButton(
-                        onPressed: () => authService.signOut(),
-                        child: Icon(
-                          Icons.power_settings_new,
-                          color: Colors.white,
-                          size: 60,
-                        ),
-                      )),
+                            onPressed: () => authService.signOut(),
+                            child: Icon(
+                              Icons.power_settings_new,
+                              color: Colors.white,
+                              size: 60,
+                            ),
+                          )),
                     ),
                   ],
                 ),
@@ -182,7 +183,7 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                       Center(
                         child: Text(
-                          'à ${widget.user.friends[0].name}',
+                          'à ${widget.user.friends[index].name}',
                           style: TextStyle(
                               color: Colors.yellow[800],
                               fontFamily: 'Bratsy',
@@ -194,7 +195,7 @@ class _MyProfileState extends State<MyProfile> {
                     ],
                   ),
                 ),
-                FloatingActionButton.extended(
+/*                FloatingActionButton.extended(
                   backgroundColor: Colors.white,
                   onPressed: () {
                     print("rends l'argent");
@@ -204,7 +205,43 @@ class _MyProfileState extends State<MyProfile> {
                     'PAYER',
                     style: TextStyle(color: Colors.purple[700]),
                   ),
-                ),
+                ),*/
+                if (widget.user.friends.length > 1)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      if (index > 0)
+                        FloatingActionButton(
+                          backgroundColor: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              index--;
+                            });
+                          },
+                          child: Icon(
+                            Icons.keyboard_arrow_up,
+                            color: Colors.purple[700],
+                            size: 30,
+                          ),
+                        ),
+                      if (index > 0)
+                        SizedBox(width: 20,),
+                      if (index < widget.user.friends.length - 1)
+                        FloatingActionButton(
+                          backgroundColor: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              index++;
+                            });
+                          },
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.purple[700],
+                            size: 30,
+                          ),
+                        ),
+                    ],
+                  )
               ],
             ));
       },
@@ -231,7 +268,13 @@ class _MyProfileState extends State<MyProfile> {
 
   int getMoneyEarnedBy(AsyncSnapshot snapshot) {
     if (snapshot.data != null) {
-      return snapshot.data["friends"][0]["moneyEarned"];
+      int moneyEarned = 0;
+      snapshot.data["friends"].forEach((friend) {
+        if (friend["uid"] == widget.user.uid) {
+          moneyEarned = friend["moneyEarned"];
+        }
+      });
+      return moneyEarned;
     } else {
       return 0;
     }
