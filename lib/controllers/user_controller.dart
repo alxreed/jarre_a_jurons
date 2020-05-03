@@ -27,8 +27,9 @@ class UserController {
     userService.addFriendInDB(user, newFriend);
   }
 
-  User getUser(String uid) {
-    return userService.getUser(uid);
+  Future<User> getUser(String uid) async {
+    DocumentSnapshot snap = await (userService.getUser(uid));
+    return new User(snap);
   }
 }
 

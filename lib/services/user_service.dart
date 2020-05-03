@@ -23,14 +23,8 @@ class UserService {
     return await ref.updateData({"friends": FieldValue.arrayUnion(friend)});
   }
 
-  User getUser(String uid) {
-    User user;
-    _db.collection('users').document(uid).snapshots().listen((snapshot) {
-      print(snapshot.data);
-      user = User(snapshot);
-    });
-    print(user);
-    return user;
+  Future<DocumentSnapshot> getUser(String uid) async {
+    return await _db.collection('users').document(uid).get();
   }
 
 }

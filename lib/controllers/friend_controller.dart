@@ -15,9 +15,9 @@ class FriendController {
     return isFriend;
   }
 
-  void addMeAsFriend(User user, Invitation invitation) {
+  Future addMeAsFriend(User user, Invitation invitation) async {
     Friend meAsFriend = Friend.fromUser(user);
-    User myFriendAsUser = userController.getUser(invitation.userUid);
+    User myFriendAsUser = await userController.getUser(invitation.userUid);
     userService.addFriendInDB(myFriendAsUser, meAsFriend);
   }
 }
