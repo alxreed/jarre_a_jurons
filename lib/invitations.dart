@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/controllers/friend_controller.dart';
 import 'package:jarreajurons/controllers/invitation_controller.dart';
 import 'package:jarreajurons/controllers/user_controller.dart';
 import 'package:jarreajurons/my_profile.dart';
+import 'package:jarreajurons/routing_page.dart';
 import 'package:jarreajurons/services/invitation_service.dart';
 
 import 'model/invitation.dart';
@@ -106,7 +108,8 @@ class _InvitationsState extends State<Invitations> {
     });
   }
 
-  void _acceptInvite(Invitation invitation) {
+  void _acceptInvite(Invitation invitation) async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -129,7 +132,7 @@ class _InvitationsState extends State<Invitations> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MyProfile(user: widget.user)));
+                          builder: (context) => RoutingPage(user: user)));
                 },
               ),
             ],
