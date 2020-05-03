@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/controllers/friend_controller.dart';
 import 'package:jarreajurons/controllers/user_controller.dart';
 import 'package:jarreajurons/loader.dart';
 import 'package:jarreajurons/model/user.dart';
+import 'package:jarreajurons/routing_page.dart';
 import 'package:jarreajurons/services/invitation_service.dart';
 
 class SearchUsers extends StatefulWidget {
@@ -124,7 +126,8 @@ class _SearchUsersState extends State<SearchUsers> {
     invitationService.invite(user, uid);
   }
 
-  void _showDialog(DocumentSnapshot snapshot, String uid) {
+  void _showDialog(DocumentSnapshot snapshot, String uid) async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -147,7 +150,7 @@ class _SearchUsersState extends State<SearchUsers> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              SearchUsers(user: widget.user)));
+                              RoutingPage(user: user)));
                 },
               ),
             ],
