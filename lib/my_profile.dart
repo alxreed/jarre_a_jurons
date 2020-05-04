@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/invitations.dart';
 import 'package:jarreajurons/model/user.dart';
+import 'package:jarreajurons/no_friend_profile.dart';
 import 'package:jarreajurons/search_users.dart';
 import 'package:jarreajurons/services/auth_service.dart';
 
@@ -31,6 +32,7 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user.friends.length == 0) return NoFriendProfile(user: widget.user,);
     return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
@@ -194,18 +196,6 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                if (widget.user.friends.length == 0)
-                  Center(
-                    child: Text(
-                      "Vous n'avez pas d'ami",
-                      style: TextStyle(
-                          color: Colors.yellow[800],
-                          fontFamily: 'Bratsy',
-                          fontSize: 70,
-                          height: 1),
-                      textAlign: TextAlign.center,
                     ),
                   ),
 /*                FloatingActionButton.extended(
