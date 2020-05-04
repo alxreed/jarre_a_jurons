@@ -13,6 +13,7 @@ class MyProfile extends StatefulWidget {
 
   final String title;
   final User user;
+  int index = 0;
 
   @override
   _MyProfileState createState() => _MyProfileState();
@@ -20,13 +21,12 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   int _moneyEarnedBy;
-  int index;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    index = 0;
+    widget.index = 0;
   }
 
   @override
@@ -34,7 +34,7 @@ class _MyProfileState extends State<MyProfile> {
     return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
-          .document(widget.user.friends[index].uid)
+          .document(widget.user.friends[widget.index].uid)
           .snapshots(),
       builder: (context, snapshot) {
         _moneyEarnedBy = getMoneyEarnedBy(snapshot);
@@ -184,7 +184,7 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                         Center(
                           child: Text(
-                            'à ${widget.user.friends[index].name}',
+                            'à ${widget.user.friends[widget.index].name}',
                             style: TextStyle(
                                 color: Colors.yellow[800],
                                 fontFamily: 'Bratsy',
@@ -223,12 +223,12 @@ class _MyProfileState extends State<MyProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      if (index > 0)
+                      if (widget.index > 0)
                         FloatingActionButton(
                           backgroundColor: Colors.white,
                           onPressed: () {
                             setState(() {
-                              index--;
+                              widget.index--;
                             });
                           },
                           child: Icon(
@@ -237,16 +237,16 @@ class _MyProfileState extends State<MyProfile> {
                             size: 30,
                           ),
                         ),
-                      if (index > 0)
+                      if (widget.index > 0)
                         SizedBox(
                           width: 20,
                         ),
-                      if (index < widget.user.friends.length - 1)
+                      if (widget.index < widget.user.friends.length - 1)
                         FloatingActionButton(
                           backgroundColor: Colors.white,
                           onPressed: () {
                             setState(() {
-                              index++;
+                              widget.index++;
                             });
                           },
                           child: Icon(
