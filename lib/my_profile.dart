@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jarreajurons/invitations.dart';
 import 'package:jarreajurons/model/user.dart';
+import 'package:jarreajurons/no_friend_profile.dart';
 import 'package:jarreajurons/search_users.dart';
 import 'package:jarreajurons/services/auth_service.dart';
 
@@ -13,6 +14,7 @@ class MyProfile extends StatefulWidget {
 
   final String title;
   final User user;
+  int index = 0;
 
   @override
   _MyProfileState createState() => _MyProfileState();
@@ -20,21 +22,21 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   int _moneyEarnedBy;
-  int index;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    index = 0;
+    widget.index = 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user.friends.length == 0) return NoFriendProfile(user: widget.user,);
     return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
-          .document(widget.user.friends[index].uid)
+          .document(widget.user.friends[widget.index].uid)
           .snapshots(),
       builder: (context, snapshot) {
         _moneyEarnedBy = getMoneyEarnedBy(snapshot);
@@ -184,7 +186,7 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                         Center(
                           child: Text(
-                            'à ${widget.user.friends[index].name}',
+                            'à ${widget.user.friends[widget.index].name}',
                             style: TextStyle(
                                 color: Colors.yellow[800],
                                 fontFamily: 'Bratsy',
@@ -194,18 +196,6 @@ class _MyProfileState extends State<MyProfile> {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                if (widget.user.friends.length == 0)
-                  Center(
-                    child: Text(
-                      "Vous n'avez pas d'ami",
-                      style: TextStyle(
-                          color: Colors.yellow[800],
-                          fontFamily: 'Bratsy',
-                          fontSize: 70,
-                          height: 1),
-                      textAlign: TextAlign.center,
                     ),
                   ),
 /*                FloatingActionButton.extended(
@@ -223,12 +213,12 @@ class _MyProfileState extends State<MyProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      if (index > 0)
+                      if (widget.index > 0)
                         FloatingActionButton(
                           backgroundColor: Colors.white,
                           onPressed: () {
                             setState(() {
-                              index--;
+                              widget.index--;
                             });
                           },
                           child: Icon(
@@ -237,16 +227,16 @@ class _MyProfileState extends State<MyProfile> {
                             size: 30,
                           ),
                         ),
-                      if (index > 0)
+                      if (widget.index > 0)
                         SizedBox(
                           width: 20,
                         ),
-                      if (index < widget.user.friends.length - 1)
+                      if (widget.index < widget.user.friends.length - 1)
                         FloatingActionButton(
                           backgroundColor: Colors.white,
                           onPressed: () {
                             setState(() {
-                              index++;
+                              widget.index++;
                             });
                           },
                           child: Icon(
