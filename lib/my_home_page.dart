@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jarreajurons/login_page.dart';
+import 'package:jarreajurons/routing_page.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -27,7 +29,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           onTap: () {
-            print("hahaha");
+            Navigator.push(
+              context,
+//              MaterialPageRoute(builder: (context) => RoutingPage()),
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
           },
         ));
   }
